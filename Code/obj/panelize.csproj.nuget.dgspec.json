@@ -1,0 +1,139 @@
+{
+  "format": 1,
+  "restore": {
+    "b:\\steamlibrary\\steamapps\\common\\sbox\\addons\\libraryproject\\Libraries\\Panelize\\Code\\panelize.csproj": {}
+  },
+  "projects": {
+    "B:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\base\\Code\\Base Library.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "B:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\base\\Code\\Base Library.csproj",
+        "projectName": "Base Library",
+        "projectPath": "B:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\base\\Code\\Base Library.csproj",
+        "packagesPath": "C:\\Users\\Kilian\\.nuget\\packages\\",
+        "outputPath": "B:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\base\\Code\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Users\\Kilian\\AppData\\Roaming\\Godot\\mono\\GodotNuGetFallbackFolder",
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Kilian\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Kilian\\AppData\\Roaming\\NuGet\\config\\Godot.Offline.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "allWarningsAsErrors": true
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "all"
+        },
+        "SdkAnalysisLevel": "9.0.100"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "b:\\steamlibrary\\steamapps\\common\\sbox\\addons\\libraryproject\\Libraries\\Panelize\\Code\\panelize.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "b:\\steamlibrary\\steamapps\\common\\sbox\\addons\\libraryproject\\Libraries\\Panelize\\Code\\panelize.csproj",
+        "projectName": "panelize",
+        "projectPath": "b:\\steamlibrary\\steamapps\\common\\sbox\\addons\\libraryproject\\Libraries\\Panelize\\Code\\panelize.csproj",
+        "packagesPath": "C:\\Users\\Kilian\\.nuget\\packages\\",
+        "outputPath": "b:\\steamlibrary\\steamapps\\common\\sbox\\addons\\libraryproject\\Libraries\\Panelize\\Code\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Users\\Kilian\\AppData\\Roaming\\Godot\\mono\\GodotNuGetFallbackFolder",
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Kilian\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Kilian\\AppData\\Roaming\\NuGet\\config\\Godot.Offline.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "B:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\base\\Code\\Base Library.csproj": {
+                "projectPath": "B:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\base\\Code\\Base Library.csproj"
+              }
+            }
+          }
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "all"
+        },
+        "SdkAnalysisLevel": "9.0.100"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
