@@ -42,7 +42,7 @@ public class PanelList : Widget
 			return;
 
 		var session = PanelEditorSession.Current;
-		if(session == null)
+		if( session == null)
 		{
 			lastHash = 0;
 			tree.Clear();
@@ -50,13 +50,12 @@ public class PanelList : Widget
 		}
 
 		int hash = session.GetHashCode();
-		//Log.Info( $"H: {hash}" );
 		if ( hash == lastHash )
 			return;
 
 		lastHash = hash;
 		tree.Clear();
-		tree.AddItem( new PanelTreeNode( session.SelectedPanel ) );
+		tree.AddItem( new PanelTreeNode( session.SelectedPanel, session ) );
 	}
 
 	private void CreateToolBar()
@@ -98,11 +97,14 @@ public class PanelList : Widget
 
 public class PanelTreeNode : TreeNode<Panel>
 {
-	public PanelTreeNode( Panel panel )
+	private PanelEditorSession session;
+	private bool isEditorPanel = true;
+	public PanelTreeNode( Panel panel, PanelEditorSession session )
 	{
 		Value = panel;
+		this.session = session;
+		//CanEdit = session.IsEditorPanel( panel );
 	}
-
 	public override int ValueHash
 	{
 		get
@@ -115,7 +117,7 @@ public class PanelTreeNode : TreeNode<Panel>
 
 	protected override void BuildChildren()
 	{
-		SetChildren( Value.Children, x => new PanelTreeNode( x ) );
+		SetChildren( Value.Children, x => new PanelTreeNode( x, session ) );
 	}
 
 	protected override bool HasDescendant( object obj )
@@ -128,9 +130,9 @@ public class PanelTreeNode : TreeNode<Panel>
 	{
 		PaintSelection( item );
 
-		var hoveredInGame = Value.PseudoClass.HasFlag( Sandbox.UI.PseudoClass.Hover );
+		var hovered = Value.PseudoClass.HasFlag( PseudoClass.Hover );
 		var a = Value.IsVisible ? 1.0f : 0.5f;
-		var r = item.Rect;
+		var rect = item.Rect;
 
 		void Write( Color color, string text, ref Rect r )
 		{
@@ -148,8 +150,16 @@ public class PanelTreeNode : TreeNode<Panel>
 		var brackets = Theme.Yellow.WithAlpha( 0.7f );
 		var element = Theme.White.WithAlpha( 0.9f );
 		var keyword = Theme.White.WithAlpha( 0.7f );
+		var valueColor = Theme.Blue;
 
-		if ( hoveredInGame )
+		if(!isEditorPanel )
+		{
+			brackets = Theme.Grey.WithAlpha( 0.7f );
+			element = Theme.Grey.WithAlpha( 0.9f );
+			keyword = Theme.Grey.WithAlpha( 0.7f );
+			valueColor = Theme.White;
+		}
+		else if ( hovered )
 		{
 			element = Theme.Green.WithAlpha( 0.9f );
 			keyword = Theme.Green.WithAlpha( 0.6f );
@@ -158,40 +168,42 @@ public class PanelTreeNode : TreeNode<Panel>
 		Paint.SetDefaultFont();
 
 		{
-			Write( brackets, $"<", ref r );
+			Write( brackets, $"<", ref rect );
 			Paint.SetDefaultFont( 8, 500 );
-			Write( element, $"{Value.ElementName}", ref r );
+			Write( element, $"{Value.ElementName}", ref rect );
 			Paint.SetDefaultFont();
 		}
 
 		if ( !string.IsNullOrEmpty( Value?.Id ) )
 		{
-			Write( keyword, $" id=\"", ref r );
-			Paint.SetDefaultFont( 8, 500 );
-			Write( Theme.Blue, Value?.Id, ref r );
+			Write( keyword, $" id=\"", ref rect );
+			//Paint.SetDefaultFont( 8, 500 );
+			Write( valueColor, Value?.Id, ref rect );
 			Paint.SetDefaultFont();
-			Write( keyword, $"\"", ref r );
+			Write( keyword, $"\"", ref rect );
 		}
 
 		if ( !string.IsNullOrEmpty( Value?.Classes ) )
 		{
-			Write( keyword, $" class=\"", ref r );
-			Write( Theme.Blue, Value?.Classes, ref r );
-			Write( keyword, $"\"", ref r );
+			Write( keyword, $" class=\"", ref rect );
+			Write( valueColor, Value?.Classes, ref rect );
+			Write( keyword, $"\"", ref rect );
 		}
 
-		Write( brackets, $">", ref r );
+		Write( brackets, $">", ref rect );
 
 		if ( !string.IsNullOrEmpty( Value.SourceFile ) )
 		{
 			var localFile = System.IO.Path.GetFileName( Value.SourceFile );
-			Write( Theme.Green.WithAlpha( 0.5f ), $" {localFile}:{Value.SourceLine} ", ref r );
+			Write( Theme.Green.WithAlpha( 0.5f ), $" {localFile}:{Value.SourceLine} ", ref rect );
 		}
 	}
 
 	
 	public override bool OnContextMenu()
 	{
+		if ( !isEditorPanel ) return false;
+
 		var menu = new ContextMenu( null );
 
 		menu.AddOption( "Create Child", "add", OpenCreateChildMenu );
@@ -258,6 +270,7 @@ public class PanelTreeNode : TreeNode<Panel>
 		if ( tag == "div" || tag == "p" || tag == "span" ) panel ??= new Panel();
 		else panel = EditorTypeLibrary.Create<Panel>( tag, false );
 		panel ??= new Panel();
+		session.AddEditorPanel(panel);
 		panel.ElementName = tag;
 		panel.Parent = Value;
 

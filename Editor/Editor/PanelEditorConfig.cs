@@ -42,8 +42,6 @@ public class PanelEditorConfig : Widget
 			Panel in preview is a smaller than the preview window -> Open your game preview window and set the size to '1920x1080' (Sbox issue)
 
 			Panel pseudoclass styles dont work -> Not supported yet, sbox issue
-			
-			Cant create new panel / Panel is not found in TypeLibrary -> Open your code editor and save (trigger a hotload), this should fix the issue.
 
 			For other issues, feel free to ping me on the sbox discord. (@qualitykk)
 		" );

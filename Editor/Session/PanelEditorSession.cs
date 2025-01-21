@@ -7,11 +7,6 @@ namespace Panelize;
 
 public partial class PanelEditorSession
 {
-	static PanelEditorSession()
-	{
-		UpdatePanelTypes();
-	}
-
 	[EditorEvent.Hotload]
 	private static void OnHotload()
 	{
@@ -31,10 +26,14 @@ public partial class PanelEditorSession
 	public bool HasChanges { get; set; }
 	private Dictionary<Panel, PanelState> panelStates = new();
 	private List<StyleSheet> panelSheets = new();
+	private List<Panel> createdPanels = new();
 	public PanelEditorSession(PanelEditor editor)
 	{
 		EditorWidget = editor;
 		UpdateWindowTitle();
+
+		if ( panelTypes == null )
+			UpdatePanelTypes();
 	}
 	public Panel New()
 	{
@@ -93,8 +92,32 @@ public partial class PanelEditorSession
 		EditorWidget.RootPanel.DeleteChildren( true );
 		EditorWidget.RootPanel.AddChild( newPanel );
 
+		/*
+		AddEditorPanel( newPanel );
+		foreach(var descendant in newPanel.Descendants)
+		{
+			if ( path.Contains( descendant.SourceFile ) )
+			{
+				AddEditorPanel( descendant );
+			}
+			//Log.Info( $"DESC {descendant} SOURCE FILE {descendant.SourceFile} VS {path}" );
+		}
+		*/
+
 		UpdateWindowTitle();
 		return newPanel;
+	}
+	/// <summary>
+	/// Registers a panel as created by this editor.
+	/// </summary>
+	/// <param name="panel"></param>
+	public void AddEditorPanel(Panel panel)
+	{
+		createdPanels.Add( panel );
+	}
+	public bool IsEditorPanel(Panel panel)
+	{
+		return createdPanels?.Contains( panel ) ?? false;
 	}
 	public List<StyleBlock> GetStyleBlocks(Panel panel)
 	{

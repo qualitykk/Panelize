@@ -58,6 +58,8 @@ public static class PanelSerializer
 		{
 			foreach((string key, object value) in state.Properties)
 			{
+				if ( key == "Text" ) continue;
+
 				content += $" {key}=\"{value}\"";
 			}
 		}
