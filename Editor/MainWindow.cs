@@ -29,11 +29,11 @@ public partial class MainWindow : DockWindow
 
 		Title = "Panelize";
 		Size = new Vector2( 1920, 1080f );
-
 		undoStack = new( () => "Serialize" );
 
 		BuildUI();
 		Show();
+		MakeMaximized();
 		Focus();
 	}
 	~MainWindow()
