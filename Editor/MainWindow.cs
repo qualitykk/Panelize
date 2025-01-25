@@ -19,10 +19,10 @@ public partial class MainWindow : DockWindow
 	{
 		if(Instance.IsValid())
 		{
-			//Instance.Focus();
-			//Destroy();
-			//return;
-			Instance.Destroy();
+			Instance.Focus();
+			Destroy();
+			return;
+			//Instance.Destroy();
 		}
 		Instance = this;
 		DeleteOnClose = true;
@@ -172,13 +172,13 @@ public partial class MainWindow : DockWindow
 	private void Save()
 	{
 		var session = PanelEditorSession.Current;
-		if ( string.IsNullOrEmpty( session.SelectedRootFile ))
+		if ( string.IsNullOrEmpty( session.FilePath ))
 		{
 			SaveAs();
 			return;
 		}
 
-		Save( session, session.SelectedRootFile );
+		Save( session, session.FilePath );
 	}
 
 	private void SaveAs()

@@ -49,13 +49,13 @@ public class PanelList : Widget
 			return;
 		}
 
-		int hash = session.GetHashCode();
+		int hash = HashCode.Combine(session);
 		if ( hash == lastHash )
 			return;
 
 		lastHash = hash;
 		tree.Clear();
-		tree.AddItem( new PanelTreeNode( session.SelectedPanel, session ) );
+		tree.AddItem( new PanelTreeNode( session.Panel, session ) );
 	}
 
 	private void CreateToolBar()
@@ -103,7 +103,7 @@ public class PanelTreeNode : TreeNode<Panel>
 	{
 		Value = panel;
 		this.session = session;
-		//CanEdit = session.IsEditorPanel( panel );
+		isEditorPanel = session.IsEditorPanel( panel );
 	}
 	public override int ValueHash
 	{
@@ -152,7 +152,7 @@ public class PanelTreeNode : TreeNode<Panel>
 		var keyword = Theme.White.WithAlpha( 0.7f );
 		var valueColor = Theme.Blue;
 
-		if(!isEditorPanel )
+		if( !isEditorPanel )
 		{
 			brackets = Theme.Grey.WithAlpha( 0.7f );
 			element = Theme.Grey.WithAlpha( 0.9f );

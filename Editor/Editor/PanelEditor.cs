@@ -22,9 +22,6 @@ public partial class PanelEditor : SceneRenderingWidget
 		}
 	}
 	public PanelEditorSession Session { get; private set; }
-	public TypeDescription SelectedRootType => Session.SelectedRootType;
-	public string SelectedRootFile => Session.SelectedRootFile;
-	public Panel SelectedPanel => Session.SelectedPanel;
 	public RootPanel RootPanel => rootPanel;
 	ScreenPanel rootPanelComponent;
 	PanelRenderObject rootPanelRenderer;

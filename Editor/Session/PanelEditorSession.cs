@@ -1,4 +1,5 @@
 ﻿
+using Sandbox.Razor;
 using Sandbox.UI;
 using System.IO;
 using System.Linq;
@@ -18,11 +19,10 @@ public partial class PanelEditorSession
 	}
 	static List<TypeDescription> panelTypes;
 	public static PanelEditorSession Current { get; internal set; }
-	public TypeDescription SelectedRootType { get; set; }
-	public string SelectedRootFile { get; set; }
-	public Panel SelectedPanel { get; set; }
+	public string FilePath { get; set; }
+	public Panel Panel { get; set; }
 	public PanelEditor EditorWidget { get; set; }
-	public IReadOnlyList<StyleSheet> SelectedPanelSheets => panelSheets.AsReadOnly();
+	public IReadOnlyList<StyleSheet> PanelSheets => panelSheets.AsReadOnly();
 	public bool HasChanges { get; set; }
 	private Dictionary<Panel, PanelState> panelStates = new();
 	private List<StyleSheet> panelSheets = new();
@@ -44,7 +44,7 @@ public partial class PanelEditorSession
 		newPanel.StyleSheet.Add( sheet );
 		panelSheets.Add( sheet );
 
-		SelectedPanel = newPanel;
+		Panel = newPanel;
 		EditorWidget.RootPanel.DeleteChildren();
 		EditorWidget.RootPanel.AddChild( newPanel );
 
@@ -80,32 +80,45 @@ public partial class PanelEditorSession
 			Log.Warning( "Cant load panel, not found in types!" );
 			return null;
 		}
-		var newPanel = panelType.Create<Panel>();
 
-		SelectedRootType = panelType;
-		SelectedRootFile = path;
-		SelectedPanel = newPanel;
+		var referencePanel = panelType.Create<Panel>();
+		// Render reference manually
+		referencePanel.CallMethod( "InternalRenderTree" );
+		void MovePanel(Panel reference, Panel parent)
+		{
+			parent.AddChild( reference );
+			if(path.Contains(reference.SourceFile))
+				createdPanels.Add(reference);
+			if ( reference.HasChildren )
+			{
+				foreach ( var child in reference.Children )
+				{
+					MovePanel( child, reference );
+				}
+			}
+		}
+
+		Panel newPanel = new();
+		newPanel.StyleSheet = referencePanel.StyleSheet;
+		EditorWidget.RootPanel.DeleteChildren( true );
+		EditorWidget.RootPanel.AddChild( newPanel );
+
+		createdPanels = [newPanel];
+		newPanel.ElementName = referencePanel.ElementName;
+		foreach(var child in referencePanel.Children.ToArray() )
+			MovePanel(child, newPanel);
+
+		FilePath = path;
+		Panel = newPanel;
 		panelSheets = newPanel.StyleSheet.GetMember<List<StyleSheet>>( "List" ) ?? new();
 		if ( !panelSheets.Any() )
 			panelSheets.Add( new() );
 
-		EditorWidget.RootPanel.DeleteChildren( true );
-		EditorWidget.RootPanel.AddChild( newPanel );
-
-		/*
-		AddEditorPanel( newPanel );
-		foreach(var descendant in newPanel.Descendants)
-		{
-			if ( path.Contains( descendant.SourceFile ) )
-			{
-				AddEditorPanel( descendant );
-			}
-			//Log.Info( $"DESC {descendant} SOURCE FILE {descendant.SourceFile} VS {path}" );
-		}
-		*/
+		referencePanel.Delete( true );
+		Log.Info( $"Load panel {newPanel} ({newPanel.ChildrenCount} children) ({createdPanels.Count} created)" );
 
 		UpdateWindowTitle();
-		return newPanel;
+		return referencePanel;
 	}
 	/// <summary>
 	/// Registers a panel as created by this editor.
@@ -159,13 +172,13 @@ public partial class PanelEditorSession
 	}
 	public void UpdateWindowTitle()
 	{
-		if ( SelectedRootType != null && SelectedRootType.IsValid)
+		if(Panel.IsValid())
 		{
-			EditorWidget.WindowTitle = $"Preview - {SelectedRootType.SourceFile ?? SelectedRootType.Name}";
+			EditorWidget.WindowTitle = $"Preview - {Panel.ElementName}";
 		}
-		else if(SelectedPanel.IsValid())
+		else if ( !string.IsNullOrEmpty(FilePath))
 		{
-			EditorWidget.WindowTitle = $"Preview - {SelectedPanel.ElementName}";
+			EditorWidget.WindowTitle = $"Preview - {FilePath}";
 		}
 		else
 		{
@@ -188,6 +201,6 @@ public partial class PanelEditorSession
 
 	public override int GetHashCode()
 	{
-		return HashCode.Combine( SelectedRootType, SelectedRootFile, SelectedPanel );
+		return HashCode.Combine( FilePath, Panel, createdPanels );
 	}
 }

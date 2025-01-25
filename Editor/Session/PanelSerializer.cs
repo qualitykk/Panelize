@@ -1,5 +1,6 @@
 ﻿using Sandbox.Diagnostics;
 using Sandbox.UI;
+using System.Linq;
 using Label = Sandbox.UI.Label;
 
 namespace Panelize;
@@ -10,7 +11,7 @@ public static class PanelSerializer
 	public static string SerializeSession(PanelEditorSession session, bool serializeStyle = false, string panelName = "")
 	{
 		Assert.NotNull( session );
-		var panel = session.SelectedPanel;
+		var panel = session.Panel;
 		Assert.NotNull( panel );
 
 		string content = @"
@@ -72,7 +73,7 @@ public static class PanelSerializer
 		}
 		else if ( panel.HasChildren )
 		{
-			foreach ( var child in panel.Children )
+			foreach ( var child in panel.Children.Where(session.IsEditorPanel) )
 			{
 				content += SerializeContent( child, session, indent + 1 );
 			}
@@ -99,7 +100,7 @@ public static class PanelSerializer
 	public static string SerializeStyle(PanelEditorSession session, string panelName = "")
 	{
 		string style = "";
-		foreach ( var sheet in session.SelectedPanelSheets )
+		foreach ( var sheet in session.PanelSheets )
 		{
 			foreach ( var node in sheet.Nodes ) 
 			{
@@ -119,9 +120,9 @@ public static class PanelSerializer
 
 		if ( !string.IsNullOrEmpty( panelName ) )
 		{
-			string oldName = session.SelectedPanel.ElementName;
+			string oldName = session.Panel.ElementName;
 			if ( string.IsNullOrEmpty( oldName ) )
-				oldName = session.SelectedPanel.GetType().Name;
+				oldName = session.Panel.GetType().Name;
 
 			style = style.Replace( oldName, panelName, StringComparison.OrdinalIgnoreCase );
 		}

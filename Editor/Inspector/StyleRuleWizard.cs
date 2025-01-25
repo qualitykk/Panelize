@@ -9,7 +9,7 @@ public class StyleRuleWizard : Window
 {
 	public static StyleRuleWizard OpenWithSession(Panel panel, Action onFinished = null, StyleBlock block = null )
 	{
-		StyleSheet sheet = PanelEditorSession.Current?.SelectedPanelSheets?.FirstOrDefault();
+		StyleSheet sheet = PanelEditorSession.Current?.PanelSheets?.FirstOrDefault();
 		if(sheet == null)
 			sheet = panel.AllStyleSheets.FirstOrDefault();
 
