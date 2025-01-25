@@ -28,3 +28,4 @@ Editor/Properties/*
 # Exported / standalone games
 Exports/
 .sbox/
+/Code/obj
